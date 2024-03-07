@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
+import java.util.HashMap;
 import java.util.List;
 
 @RestController
@@ -27,6 +28,12 @@ public class CustomerController {
     @PostMapping(value = "/create")
     public ResponseEntity<Object> saveCustomer(@RequestBody Customer customer) {
         Customer result = customerService.saveCustomer(customer);
+        return ResponseEntity.ok().body(result);
+    }
+
+    @DeleteMapping(value = "/delete/{idCustomer}")
+    public ResponseEntity<Object> deleteCustomer(@PathVariable Long idCustomer) {
+        HashMap<String, Object> result = customerService.deleteCustomer(idCustomer);
         return ResponseEntity.ok().body(result);
     }
 
