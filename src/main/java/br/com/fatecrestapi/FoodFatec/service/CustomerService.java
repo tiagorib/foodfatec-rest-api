@@ -49,4 +49,10 @@ public class CustomerService {
         return result;
     }
 
+    public Optional<Customer> findCustomerById(Long idCustomer) {
+        return Optional.ofNullable(customerRepository.findById(idCustomer)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+                        "Cliente não encontrado!")));
+    }
+
 }
