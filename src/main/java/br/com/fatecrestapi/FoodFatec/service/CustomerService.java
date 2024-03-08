@@ -55,4 +55,21 @@ public class CustomerService {
                         "Cliente não encontrado!")));
     }
 
+    public Customer updateCustomer(Customer customer) {
+        if (customer.getMonthlyIncomeCustomer() != null &&
+                customer.getMonthlyIncomeCustomer().compareTo(BigDecimal.valueOf(0)) >= 0 &&
+                !customer.getPasswordCustomer().equals("") &&
+                customer.getPasswordCustomer() != null) {
+            if (findCustomerById(customer.getIdCustomer()) != null) {
+                return customerRepository.saveAndFlush(customer);
+            } else {
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+                        "Cliente não encontrado!");
+            }
+        } else {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    "A renda salarial deve ser maior ou igual 0!");
+        }
+    }
+
 }
