@@ -23,10 +23,7 @@ public class CustomerService {
     }
 
     public Customer saveCustomer(Customer customer) {
-        if (customer.getMonthlyIncomeCustomer() != null &&
-                customer.getMonthlyIncomeCustomer().compareTo(BigDecimal.valueOf(0)) >= 0 &&
-                !customer.getPasswordCustomer().equals("") &&
-                customer.getPasswordCustomer() != null) {
+        if (validateCustomer(customer)) {
             return customerRepository.saveAndFlush(customer);
         } else {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
@@ -56,10 +53,7 @@ public class CustomerService {
     }
 
     public Customer updateCustomer(Customer customer) {
-        if (customer.getMonthlyIncomeCustomer() != null &&
-                customer.getMonthlyIncomeCustomer().compareTo(BigDecimal.valueOf(0)) >= 0 &&
-                !customer.getPasswordCustomer().equals("") &&
-                customer.getPasswordCustomer() != null) {
+        if (validateCustomer(customer)) {
             if (findCustomerById(customer.getIdCustomer()) != null) {
                 return customerRepository.saveAndFlush(customer);
             } else {
@@ -69,6 +63,17 @@ public class CustomerService {
         } else {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
                     "A renda salarial deve ser maior ou igual 0!");
+        }
+    }
+
+    public Boolean validateCustomer(Customer customer) {
+        if (customer.getMonthlyIncomeCustomer() != null &&
+                customer.getMonthlyIncomeCustomer().compareTo(BigDecimal.valueOf(0)) >= 0 &&
+                !customer.getPasswordCustomer().equals("") &&
+                customer.getPasswordCustomer() != null) {
+            return true;
+        } else {
+            return false;
         }
     }
 
