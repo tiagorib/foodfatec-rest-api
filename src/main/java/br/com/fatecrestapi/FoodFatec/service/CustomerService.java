@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
@@ -52,6 +53,26 @@ public class CustomerService {
         return Optional.ofNullable(customerRepository.findById(idCustomer)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
                         "Cliente não encontrado!")));
+    }
+
+    public Optional<Customer> findByCpfCustomer(String cpfCustomer) {
+        return Optional.ofNullable(customerRepository.findByCpfCustomer(cpfCustomer)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+                        "Nenhum cliente encontrado com o CPF: " + cpfCustomer)));
+    }
+
+    public Optional<Customer> findByEmailCustomer(String emailCustomer) {
+        return Optional.ofNullable(customerRepository.findByEmailCustomer(emailCustomer)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+                        "Nenhum cliente encontrado com esse Email!")));
+    }
+
+    public List<Customer> findByStatusTrue() {
+        return customerRepository.findByStatusCustomerIsTrueOrderByDateCreatedCustomerDesc();
+    }
+
+    public List<Customer> findByDateCreate(LocalDate dateCreatedCustomer) {
+        return customerRepository.findByDateCreated(dateCreatedCustomer);
     }
 
     public Customer updateCustomer(Customer customer) {
