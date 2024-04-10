@@ -4,10 +4,12 @@ import br.com.fatecrestapi.FoodFatec.entity.Customer;
 import br.com.fatecrestapi.FoodFatec.repository.CustomerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
@@ -24,6 +26,7 @@ public class CustomerService {
 
     public Customer saveCustomer(Customer customer) {
         if (validateCustomer(customer)) {
+            encryptPassword(customer);
             return customerRepository.saveAndFlush(customer);
         } else {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
@@ -52,9 +55,30 @@ public class CustomerService {
                         "Cliente não encontrado!")));
     }
 
+    public Optional<Customer> findByCpfCustomer(String cpfCustomer) {
+        return Optional.ofNullable(customerRepository.findByCpfCustomer(cpfCustomer)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+                        "Nenhum cliente encontrado com o CPF: " + cpfCustomer)));
+    }
+
+    public Optional<Customer> findByEmailCustomer(String emailCustomer) {
+        return Optional.ofNullable(customerRepository.findByEmailCustomer(emailCustomer)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+                        "Nenhum cliente encontrado com esse Email!")));
+    }
+
+    public List<Customer> findByStatusTrue() {
+        return customerRepository.findByStatusCustomerIsTrueOrderByDateCreatedCustomerDesc();
+    }
+
+    public List<Customer> findByDateCreate(LocalDate dateCreatedCustomer) {
+        return customerRepository.findByDateCreated(dateCreatedCustomer);
+    }
+
     public Customer updateCustomer(Customer customer) {
         if (validateCustomer(customer)) {
             if (findCustomerById(customer.getIdCustomer()) != null) {
+                encryptPassword(customer);
                 return customerRepository.saveAndFlush(customer);
             } else {
                 throw new ResponseStatusException(HttpStatus.NOT_FOUND,
@@ -76,5 +100,24 @@ public class CustomerService {
             return false;
         }
     }
+
+
+    public void encryptPassword(Customer customer){
+        BCryptPasswordEncoder encrypt = new BCryptPasswordEncoder();
+        String encryptedPassword = null;
+        if (customer.getIdCustomer() == null) {
+            encryptedPassword = encrypt.encode(customer.getPasswordCustomer());
+            customer.setPasswordCustomer(encryptedPassword);
+        } else {
+            if (!customerRepository.findById(customer.getIdCustomer()).get().getPasswordCustomer()
+                    .equals(customer.getPasswordCustomer())) {
+                encryptedPassword = encrypt.encode(customer.getPasswordCustomer());
+                customer.setPasswordCustomer(encryptedPassword);
+            }
+        }
+
+    }
+
+
 
 }
