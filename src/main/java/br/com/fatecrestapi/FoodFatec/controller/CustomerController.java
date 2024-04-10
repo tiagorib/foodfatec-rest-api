@@ -3,6 +3,7 @@ package br.com.fatecrestapi.FoodFatec.controller;
 import br.com.fatecrestapi.FoodFatec.entity.Customer;
 import br.com.fatecrestapi.FoodFatec.repository.CustomerRepository;
 import br.com.fatecrestapi.FoodFatec.service.CustomerService;
+import jakarta.websocket.server.PathParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,6 +24,30 @@ public class CustomerController {
     @GetMapping(value = "/list")
     public ResponseEntity<Object> getInfoCustomers() {
         List<Customer> result = customerService.getInfoCustomers();
+        return ResponseEntity.ok().body(result);
+    }
+
+    @GetMapping(value = "/findByCpf")
+    public ResponseEntity<Object> getCustomerByCpf(@RequestBody Customer customer) {
+        Optional<Customer> result = customerService.findByCpfCustomer(customer.getCpfCustomer());
+        return ResponseEntity.ok().body(result);
+    }
+
+    @GetMapping(value = "/findByEmail/{email}")
+    public ResponseEntity<Object> getCustomerByEmail(@PathVariable String email) {
+        Optional<Customer> result = customerService.findByEmailCustomer(email);
+        return ResponseEntity.ok().body(result);
+    }
+
+    @GetMapping(value = "/findByStatusTrue")
+    public ResponseEntity<Object> getCustomerByStatusTrue() {
+        List<Customer> result = customerService.findByStatusTrue();
+        return ResponseEntity.ok().body(result);
+    }
+
+    @GetMapping(value = "/findByDateCreated")
+    public ResponseEntity<Object> getCustomerByDateCreated(@RequestBody Customer customer) {
+        List<Customer> result = customerService.findByDateCreate(customer.getDateCreatedCustomer());
         return ResponseEntity.ok().body(result);
     }
 
