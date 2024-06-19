@@ -1,29 +1,17 @@
-package br.com.fatec.DonationHaAuthentication.service;
+package br.com.fatecrestapi.FoodFatec.service;
 
-import br.com.fatec.DonationHaAuthentication.dto.ResponseUserDTO;
-import br.com.fatec.DonationHaAuthentication.dto.SaveUserDTO;
-import br.com.fatec.DonationHaAuthentication.dto.ResponseTokenDTO;
-import br.com.fatec.DonationHaAuthentication.dto.UserLoginDTO;
-import br.com.fatec.DonationHaAuthentication.entity.User;
-import br.com.fatec.DonationHaAuthentication.enums.Role;
-import br.com.fatec.DonationHaAuthentication.exception.*;
-import br.com.fatec.DonationHaAuthentication.repository.UserRepository;
-import br.com.fatec.DonationHaAuthentication.security.UserDetailsImpl;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import br.com.fatecrestapi.FoodFatec.config.CustomerDetailsImpl;
+import br.com.fatecrestapi.FoodFatec.dto.ResponseTokenDTO;
+import br.com.fatecrestapi.FoodFatec.dto.UserLoginDTO;
+import br.com.fatecrestapi.FoodFatec.exception.LoginServiceException;
+import br.com.fatecrestapi.FoodFatec.exception.TokenException;
+import br.com.fatecrestapi.FoodFatec.repository.CustomerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
-
-import java.time.LocalDate;
-import java.util.Optional;
-import java.util.UUID;
 
 @Service
 public class AuthenticationService {
@@ -32,14 +20,14 @@ public class AuthenticationService {
     @Autowired
     private TokenService tokenService;
     @Autowired
-    private UserRepository userRepository;
+    private CustomerRepository customerRepository;
 
     public ResponseTokenDTO login(UserLoginDTO userLoginDTO) {
         try {
             var usernamePassword = new UsernamePasswordAuthenticationToken(userLoginDTO.email(), userLoginDTO.password());
             var auth = this.authenticationManager.authenticate(usernamePassword);
-            String accessToken = tokenService.generateAccessToken((UserDetailsImpl) auth.getPrincipal());
-            String refreshToken = tokenService.generateRefreshToken((UserDetailsImpl) auth.getPrincipal());
+            String accessToken = tokenService.generateAccessToken((CustomerDetailsImpl) auth.getPrincipal());
+            String refreshToken = tokenService.generateRefreshToken((CustomerDetailsImpl) auth.getPrincipal());
             if (accessToken.isEmpty() || accessToken.isBlank()) {
                 throw new TokenException("Erro ao gerar token!");
             }
@@ -52,7 +40,7 @@ public class AuthenticationService {
         }
     }
 
-    public ResponseUserDTO saveUser(SaveUserDTO saveUserDTO) {
+    /*public ResponseUserDTO saveUser(SaveUserDTO saveUserDTO) {
         if (!validUser(saveUserDTO))
             throw new ValidUserException("Usuário inválido.");
         try {
@@ -76,14 +64,14 @@ public class AuthenticationService {
         } catch (Exception ex) {
             throw new InternalServerException("Erro ao salvar usuário, tente novamente.");
         }
-    }
+    }*/
 
-    public ResponseUserDTO findUserByToken(String idUser) throws JsonProcessingException {
+    /*public ResponseUserDTO findUserByToken(String idUser) throws JsonProcessingException {
         try {
             if (idUser == null || idUser.isEmpty()) {
                 throw new TokenException("Token inválido");
             }
-            Optional<User> user = userRepository.findById(UUID.fromString(idUser));
+            Optional<Customer> customer = userRepository.findById(UUID.fromString(idUser));
             if (user.isEmpty()) {
                 throw new FindUserServiceException("Usuário não encontrado.");
             }
@@ -91,9 +79,9 @@ public class AuthenticationService {
         } catch (Exception ex) {
             throw new FindUserServiceException("Usuário não encontrado.");
         }
-    }
+    }*/
 
-    public Boolean validUser(SaveUserDTO saveUserDTO) {
+    /*public Boolean validUser(SaveUserDTO saveUserDTO) {
         if (saveUserDTO.name().isBlank() || saveUserDTO.name() == null) {
             throw new ValidUserException("Informe um nome válido");
         }
@@ -110,9 +98,9 @@ public class AuthenticationService {
                 throw new ValidUserException("Permissão não autorizada.");
         }
         return true;
-    }
+    }*/
 
-    public void encryptPassword(User user) {
+    /*public void encryptPassword(User user) {
         try {
             BCryptPasswordEncoder encrypt = new BCryptPasswordEncoder();
             String encryptedPassword = encrypt.encode(user.getPassword());
@@ -120,18 +108,18 @@ public class AuthenticationService {
         } catch (Exception ex) {
             throw new InternalServerException("Erro ao criptografar senha, tente novamente");
         }
-    }
+    }*/
 
-    public void toUser(SaveUserDTO dto, User user) {
+    /*public void toUser(SaveUserDTO dto, User user) {
         user.setUserId(dto.userId());
         user.setName(dto.name());
         user.setEmail(dto.email());
         user.setPassword(dto.password());
         user.setTelephone(dto.telephone());
         user.setRole(dto.role());
-    }
+    }*/
 
-    public ResponseUserDTO toResponseUserDTO(User user) {
+    /*public ResponseUserDTO toResponseUserDTO(User user) {
         return new ResponseUserDTO(user.getUserId(), user.getName(), user.getEmail(), user.getTelephone(), user.getDisabled(), user.getCreatedDate(), user.getUpdatedDate(), user.getRole());
-    }
+    }*/
 }

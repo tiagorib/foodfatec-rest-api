@@ -1,13 +1,13 @@
-package br.com.fatec.DonationHaAuthentication.service;
+package br.com.fatecrestapi.FoodFatec.service;
 
-import br.com.fatec.DonationHaAuthentication.entity.User;
-import br.com.fatec.DonationHaAuthentication.exception.FindUserServiceException;
-import br.com.fatec.DonationHaAuthentication.repository.UserRepository;
-import br.com.fatec.DonationHaAuthentication.security.UserDetailsImpl;
+
+import br.com.fatecrestapi.FoodFatec.config.CustomerDetailsImpl;
+import br.com.fatecrestapi.FoodFatec.entity.Customer;
+import br.com.fatecrestapi.FoodFatec.exception.FindUserServiceException;
+import br.com.fatecrestapi.FoodFatec.repository.CustomerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -16,12 +16,12 @@ import java.util.Optional;
 public class AuthorizationService implements UserDetailsService {
 
     @Autowired
-    private UserRepository userRepository;
+    private CustomerRepository customerRepository;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws FindUserServiceException {
-        Optional<User> user = userRepository.findByEmail(username);
-        user.orElseThrow(() -> new FindUserServiceException(username + " não encontrado."));
-        return user.map(UserDetailsImpl::new).get();
+        Optional<Customer> customer = customerRepository.findByEmailCustomer(username);
+        customer.orElseThrow(() -> new FindUserServiceException(username + " não encontrado."));
+        return customer.map(CustomerDetailsImpl::new).get();
     }
 }

@@ -1,4 +1,4 @@
-package br.com.fatec.DonationHaAuthentication.enums;
+package br.com.fatecrestapi.FoodFatec.enums;
 
 public enum Role {
     ADMIN("admin"),
@@ -13,4 +13,5 @@ public enum Role {
     public String getRole() {
         return role;
     }
+
 }

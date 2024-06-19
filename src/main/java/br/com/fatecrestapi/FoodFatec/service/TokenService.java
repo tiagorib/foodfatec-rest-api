@@ -1,12 +1,12 @@
-package br.com.fatec.DonationHaAuthentication.service;
+package br.com.fatecrestapi.FoodFatec.service;
 
-import br.com.fatec.DonationHaAuthentication.dto.ResponseTokenDTO;
-import br.com.fatec.DonationHaAuthentication.entity.User;
-import br.com.fatec.DonationHaAuthentication.exception.AuthorizationException;
-import br.com.fatec.DonationHaAuthentication.exception.TokenException;
-import br.com.fatec.DonationHaAuthentication.exception.FindUserServiceException;
-import br.com.fatec.DonationHaAuthentication.repository.UserRepository;
-import br.com.fatec.DonationHaAuthentication.security.UserDetailsImpl;
+import br.com.fatecrestapi.FoodFatec.config.CustomerDetailsImpl;
+import br.com.fatecrestapi.FoodFatec.dto.ResponseTokenDTO;
+import br.com.fatecrestapi.FoodFatec.entity.Customer;
+import br.com.fatecrestapi.FoodFatec.exception.AuthorizationException;
+import br.com.fatecrestapi.FoodFatec.exception.FindUserServiceException;
+import br.com.fatecrestapi.FoodFatec.exception.TokenException;
+import br.com.fatecrestapi.FoodFatec.repository.CustomerRepository;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
@@ -34,7 +34,7 @@ public class TokenService {
     private long timeAccessToken;
 
     @Autowired
-    private UserRepository userRepository;
+    private CustomerRepository customerRepository;
 
     public ResponseTokenDTO authRefreshToken(String authorization) {
         if (authorization == null || !authorization.startsWith("Bearer ")) {
@@ -42,31 +42,31 @@ public class TokenService {
         }
 
         try {
-            User user = new User();
-            user.setEmail(getPartToken(authorization, "SUBJECT"));
-            UserDetailsImpl userDetails = new UserDetailsImpl(user);
-            String accessToken = generateAccessToken(userDetails);
+            Customer customer = new Customer();
+            customer.setEmailCustomer(getPartToken(authorization, "SUBJECT"));
+            CustomerDetailsImpl customerDetails = new CustomerDetailsImpl(customer);
+            String accessToken = generateAccessToken(customerDetails);
             return new ResponseTokenDTO(accessToken, authorization.replace("Bearer ", ""));
         } catch (Exception ex) {
             throw new TokenException("Erro ao autenticar refreshToken, procure o administrador.");
         }
     }
 
-    public String generateAccessToken(UserDetailsImpl userDetails) {
+    public String generateAccessToken(CustomerDetailsImpl customerDetails) {
         try {
-            Optional<User> userOptional = userRepository.findByEmail(userDetails.getUsername());
+            Optional<Customer> userOptional = customerRepository.findByEmailCustomer(customerDetails.getUsername());
             if (!userOptional.isPresent()) {
                 throw new FindUserServiceException("Usuário não encontrado.");
             }
 
-            User user = userOptional.get();
+            Customer customer = userOptional.get();
             Algorithm algorithm = Algorithm.HMAC256(secret);
             String token = JWT.create()
-                    .withIssuer("auth-donation-api")
-                    .withClaim("idUser", user.getUserId().toString())
-                    .withClaim("emailUser", user.getEmail())
+                    .withIssuer("foodfatec-rest-api")
+                    .withClaim("idUser", customer.getIdCustomer().toString())
+                    .withClaim("emailUser", customer.getEmailCustomer())
                     .withClaim("type", "access")
-                    .withSubject(user.getRole().toString())
+                    .withSubject(customer.getRole().toString())
                     .withExpiresAt(genExpirationDate(timeAccessToken))
                     .sign(algorithm);
             return token;
@@ -75,13 +75,13 @@ public class TokenService {
         }
     }
 
-    public String generateRefreshToken(UserDetailsImpl userDetails) {
+    public String generateRefreshToken(CustomerDetailsImpl customerDetails) {
         try {
             Algorithm algorithm = Algorithm.HMAC256(secret);
             String token = JWT.create()
-                    .withIssuer("auth-donation-api")
+                    .withIssuer("foodfatec-rest-api")
                     .withClaim("type", "refresh")
-                    .withSubject(userDetails.getUsername())
+                    .withSubject(customerDetails.getUsername())
                     .withExpiresAt(genExpirationDate(timeRefreshToken))
                     .sign(algorithm);
             return token;
@@ -113,7 +113,7 @@ public class TokenService {
         try {
             Algorithm algorithm = Algorithm.HMAC256(secret);
             return JWT.require(algorithm)
-                    .withIssuer("auth-donation-api")
+                    .withIssuer("foodfatec-rest-api")
                     .build()
                     .verify(token);
         } catch (Exception ex) {
@@ -125,7 +125,7 @@ public class TokenService {
         try {
             Algorithm algorithm = Algorithm.HMAC256(secret);
             JWTVerifier verifier = JWT.require(algorithm)
-                    .withIssuer("auth-donation-api")
+                    .withIssuer("foodfatec-rest-api")
                     .build();
             DecodedJWT jwt = verifier.verify(token);
             return jwt.getClaim(claimName).asString();

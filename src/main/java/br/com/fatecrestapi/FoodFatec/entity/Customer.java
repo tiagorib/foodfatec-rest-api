@@ -1,5 +1,6 @@
 package br.com.fatecrestapi.FoodFatec.entity;
 
+import br.com.fatecrestapi.FoodFatec.enums.Role;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
@@ -55,10 +56,14 @@ public class Customer {
     @Column(name = "password_customer", nullable = false, length = 3000)
     private String passwordCustomer;
 
+    @Column(name = "role", nullable = false)
+    private Role role;
+
     @PrePersist
     private void prePersist() {
         this.setStatusCustomer(true);
         this.setDateCreatedCustomer(LocalDate.now());
+        this.setRole(Role.USER);
     }
 
 }

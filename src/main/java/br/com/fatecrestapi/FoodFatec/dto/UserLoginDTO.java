@@ -1,4 +1,4 @@
-package br.com.fatec.DonationHaAuthentication.dto;
+package br.com.fatecrestapi.FoodFatec.dto;
 
 public record UserLoginDTO(String email, String password) {
 }

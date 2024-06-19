@@ -1,4 +1,4 @@
-package br.com.fatec.DonationHaAuthentication.config;
+package br.com.fatecrestapi.FoodFatec.config;
 
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
@@ -12,8 +12,8 @@ public class SwaggerConfig {
     @Bean
     public GroupedOpenApi publicApi() {
         return GroupedOpenApi.builder()
-                .group("donation-authentication-api")
-                .packagesToScan("br.com.fatec.DonationHaAuthentication.controller")
+                .group("foodfatec-rest-api")
+                .packagesToScan("br.com.fatec.fatecrestapi.FoodFatec.controller")
                 .build();
     }
 

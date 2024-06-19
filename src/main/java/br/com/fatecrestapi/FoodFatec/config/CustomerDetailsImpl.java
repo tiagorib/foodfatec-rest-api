@@ -1,39 +1,39 @@
-package br.com.fatec.DonationHaAuthentication.security;
+package br.com.fatecrestapi.FoodFatec.config;
 
-import br.com.fatec.DonationHaAuthentication.entity.User;
-import br.com.fatec.DonationHaAuthentication.enums.Role;
+
+import br.com.fatecrestapi.FoodFatec.entity.Customer;
+import br.com.fatecrestapi.FoodFatec.enums.Role;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-public class UserDetailsImpl implements UserDetails {
+public class CustomerDetailsImpl implements UserDetails {
 
-    private User user;
+    private Customer customer;
 
-    public UserDetailsImpl(User user) {
+    public CustomerDetailsImpl(Customer customer) {
         super();
-        this.user = user;
+        this.customer = customer;
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        if (user.getRole() == Role.ADMIN)
+        if (customer.getRole() == Role.ADMIN)
             return List.of(new SimpleGrantedAuthority("ROLE_ADMIN"), new SimpleGrantedAuthority("ROLE_USER"));
         else return List.of(new SimpleGrantedAuthority("ROLE_USER"));
     }
 
     @Override
     public String getPassword() {
-        return user.getPassword();
+        return customer.getPasswordCustomer();
     }
 
     @Override
     public String getUsername() {
-        return user.getEmail();
+        return customer.getEmailCustomer();
     }
 
     @Override
@@ -53,6 +53,6 @@ public class UserDetailsImpl implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return !user.getDisabled();
+        return customer.getStatusCustomer();
     }
 }

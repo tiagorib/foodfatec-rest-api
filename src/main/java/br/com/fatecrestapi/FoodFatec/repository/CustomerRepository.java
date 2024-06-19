@@ -13,6 +13,7 @@ public interface CustomerRepository extends JpaRepository<Customer, Long> {
 
     Optional<Customer> findByCpfCustomer(String cpfCustomer);
     Optional<Customer> findByEmailCustomer(String emailCustomer);
+
     List<Customer> findByStatusCustomerIsTrueOrderByDateCreatedCustomerDesc();
 
     @Query(value = "SELECT c.* FROM customer c WHERE c.date_created_customer >= ?;", nativeQuery = true)
