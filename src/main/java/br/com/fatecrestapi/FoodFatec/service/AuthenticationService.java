@@ -2,16 +2,23 @@ package br.com.fatecrestapi.FoodFatec.service;
 
 import br.com.fatecrestapi.FoodFatec.config.CustomerDetailsImpl;
 import br.com.fatecrestapi.FoodFatec.dto.ResponseTokenDTO;
+import br.com.fatecrestapi.FoodFatec.dto.ResponseUserDTO;
 import br.com.fatecrestapi.FoodFatec.dto.UserLoginDTO;
+import br.com.fatecrestapi.FoodFatec.entity.Customer;
+import br.com.fatecrestapi.FoodFatec.exception.FindUserServiceException;
 import br.com.fatecrestapi.FoodFatec.exception.LoginServiceException;
 import br.com.fatecrestapi.FoodFatec.exception.TokenException;
 import br.com.fatecrestapi.FoodFatec.repository.CustomerRepository;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+
+import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class AuthenticationService {
@@ -66,20 +73,20 @@ public class AuthenticationService {
         }
     }*/
 
-    /*public ResponseUserDTO findUserByToken(String idUser) throws JsonProcessingException {
+    public ResponseUserDTO findUserByToken(String idCustomer) throws JsonProcessingException {
         try {
-            if (idUser == null || idUser.isEmpty()) {
+            if (idCustomer == null || idCustomer.isEmpty()) {
                 throw new TokenException("Token inválido");
             }
-            Optional<Customer> customer = userRepository.findById(UUID.fromString(idUser));
-            if (user.isEmpty()) {
+            Optional<Customer> customer = customerRepository.findById(String.valueOf(UUID.fromString(idCustomer)));
+            if (customer.isEmpty()) {
                 throw new FindUserServiceException("Usuário não encontrado.");
             }
-            return toResponseUserDTO(user.get());
+            return toResponseUserDTO(customer.get());
         } catch (Exception ex) {
             throw new FindUserServiceException("Usuário não encontrado.");
         }
-    }*/
+    }
 
     /*public Boolean validUser(SaveUserDTO saveUserDTO) {
         if (saveUserDTO.name().isBlank() || saveUserDTO.name() == null) {
@@ -119,7 +126,9 @@ public class AuthenticationService {
         user.setRole(dto.role());
     }*/
 
-    /*public ResponseUserDTO toResponseUserDTO(User user) {
-        return new ResponseUserDTO(user.getUserId(), user.getName(), user.getEmail(), user.getTelephone(), user.getDisabled(), user.getCreatedDate(), user.getUpdatedDate(), user.getRole());
-    }*/
+    public ResponseUserDTO toResponseUserDTO(Customer customer) {
+        return new ResponseUserDTO(customer.getIdCustomer(), customer.getFirstNameCustomer(), customer.getLastNameCustomer(), customer.getCpfCustomer(),
+                customer.getBirthdateCustomer(), customer.getDateCreatedCustomer(), customer.getMonthlyIncomeCustomer(),
+                customer.getStatusCustomer(), customer.getEmailCustomer(), customer.getRole());
+    }
 }

@@ -35,7 +35,7 @@ public class CustomerService {
         }
     }
 
-    public HashMap<String, Object> deleteCustomer(Long idCustomer) {
+    public HashMap<String, Object> deleteCustomer(String idCustomer) {
         Optional<Customer> customer =
                 Optional.ofNullable(customerRepository.findById(idCustomer).
                         orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
@@ -49,7 +49,7 @@ public class CustomerService {
         return result;
     }
 
-    public Optional<Customer> findCustomerById(Long idCustomer) {
+    public Optional<Customer> findCustomerById(String idCustomer) {
         return Optional.ofNullable(customerRepository.findById(idCustomer)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
                         "Cliente não encontrado!")));

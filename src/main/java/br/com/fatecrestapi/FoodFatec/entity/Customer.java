@@ -17,9 +17,9 @@ import java.time.LocalDate;
 public class Customer {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "id_customer")
-    private Long idCustomer;
+    private String idCustomer;
 
     @Column(name = "first_name_customer", nullable = false, length = 300)
     @NotBlank(message = "O campo nome é obrigatório!")

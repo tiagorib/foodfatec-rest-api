@@ -68,14 +68,14 @@ public class CustomerController {
 
     @DeleteMapping(value = "/delete/{idCustomer}")
     @Operation(summary = "Method for delete customer")
-    public ResponseEntity<Object> deleteCustomer(@PathVariable Long idCustomer) {
+    public ResponseEntity<Object> deleteCustomer(@PathVariable String idCustomer) {
         HashMap<String, Object> result = customerService.deleteCustomer(idCustomer);
         return ResponseEntity.status(HttpStatus.OK).body(ResponseGenericException.response(result));
     }
 
     @GetMapping(value = "/findCustomer/{idCustomer}")
     @Operation(summary = "Method for find customer by ID")
-    public ResponseEntity<Object> findCustomer(@PathVariable Long idCustomer) {
+    public ResponseEntity<Object> findCustomer(@PathVariable String idCustomer) {
         Optional<Customer> result = customerService.findCustomerById(idCustomer);
         return ResponseEntity.status(HttpStatus.OK).body(ResponseGenericException.response(result));
     }

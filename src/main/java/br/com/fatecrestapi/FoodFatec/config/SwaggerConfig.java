@@ -13,7 +13,7 @@ public class SwaggerConfig {
     public GroupedOpenApi publicApi() {
         return GroupedOpenApi.builder()
                 .group("foodfatec-rest-api")
-                .packagesToScan("br.com.fatec.fatecrestapi.FoodFatec.controller")
+                .packagesToScan("br.com.fatecrestapi.FoodFatec.controller")
                 .build();
     }
 
@@ -21,7 +21,7 @@ public class SwaggerConfig {
     public OpenAPI springShopOpenAPI() {
         return new OpenAPI()
                 .info(new Info().title("Authentication API")
-                        .description("Authentication API for the Conecta Amor project.")
+                        .description("Authentication API for the Food Fatec Project.")
                         .version("1.0")
                         .license(new License().name("Apache 2.0").url("http://springdoc.org")));
     }
